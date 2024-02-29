@@ -10,14 +10,13 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
                 <input type="text" id="search" class="w-25 border p-2 mb-4 rounded" placeholder="Buscar items..." />
-                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                    <a href="{{ route('items.index') }}">Buscar</a></button>
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="btn-search">Buscar</button>
                     <br>
                 <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                     <a href="{{ route('items.create') }}">Crear Item</a>
                 </button>
 
-                <table class="table-auto w-full">
+                <table class="table-auto w-full mt-10">
                     <thead>
                         <tr>
                             <th class="px-4 py-2 text-gray-600">Nombre</th>
@@ -29,9 +28,19 @@
                     <tbody id="items">
                         @foreach ($items as $item)
                             <tr>
+                            <td class="border px-4 py-2 pt-5">
+                                <div class="flex justify-center h-20 w-20">
+                                        @if ($item->picture)
+                                        <img src="{{ asset(Storage::url($item->picture)) }}" alt="{{ $item->name }}" class="h-20 w-20">
+                                        @else
+                                        <img src="https://via.placeholder.com/150" alt="{{ $item->name }}" class="h-20 w-20">
+                                        @endif
+                                    </div>
+                                </td>
                                 <td class="border px-4 py-2">{{ $item->name }}</td>
                                 <td class="border px-4 py-2">{{ $item->description }}</td>
                                 <td class="border px-4 py-2">{{ $item->price }}</td>
+                                
                                 <td class="border px-4 py-2">
     <div class="flex space-x-2">
     <div>
@@ -63,4 +72,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    const search = document.getElementById('search');
+    const items = document.getElementById('items');
+    const btnSearch = document.getElementById('btn-search');
+
+    search.addEventListener('keyup', function() {
+        const searchValue = search.value.toLowerCase();
+        const tr = items.getElementsByTagName('tr');
+
+        for (let index = 0; index < tr.length; index++) {
+            const name = tr[index].getElementsByTagName('td')[0];
+
+            if (name) {
+                const nameValue = name.textContent || name.innerText;
+
+                if (nameValue.toLowerCase().indexOf(searchValue) > -1) {
+                    tr[index].style.display = '';
+                } else {
+                    tr[index].style.display = 'none';
+                }
+            }
+        }
+    });
+</script>
 </x-app-layout>
