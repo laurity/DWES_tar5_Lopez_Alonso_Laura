@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Box;
+use App\Models\Item;
 use Illuminate\Http\Request;
+
 
 class BoxController extends Controller
 {
@@ -12,7 +14,7 @@ class BoxController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
