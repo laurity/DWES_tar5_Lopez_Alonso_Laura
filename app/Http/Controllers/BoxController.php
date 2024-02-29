@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Box;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 
 class BoxController extends Controller
@@ -14,7 +15,9 @@ class BoxController extends Controller
      */
     public function index()
     {
-        
+        return view('boxes.index', [
+            'boxes' => Box::all()
+        ]);
     }
 
     /**
@@ -22,7 +25,8 @@ class BoxController extends Controller
      */
     public function create()
     {
-        //
+        
+
     }
 
     /**
@@ -30,7 +34,15 @@ class BoxController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'label' => 'string|max:255',
+            'location' => 'string|max:255',
+        ]);
+
+        Box::create($validated);
+        return redirect()->route('box.index');
+
     }
 
     /**
@@ -38,15 +50,20 @@ class BoxController extends Controller
      */
     public function show(Box $box)
     {
-        //
+        return view('boxes.show', [
+            'box' => $box
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Box $box)
+    public function edit(Box $box): View
     {
-        //
+        return view('boxes.edit', [
+            'box' => $box,
+            'items' => Item::all()
+        ]);
     }
 
     /**
@@ -54,7 +71,13 @@ class BoxController extends Controller
      */
     public function update(Request $request, Box $box)
     {
-        //
+        $validated = $request->validate([
+            'label' => 'string|max:255',
+            'location' => 'string|max:255',
+        ]);
+
+        $box->update($validated);
+        return redirect()->route('box.show', $box);
     }
 
     /**
@@ -62,6 +85,7 @@ class BoxController extends Controller
      */
     public function destroy(Box $box)
     {
-        //
+        $box->delete();
+        return redirect()->route('box.index');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LoanController extends Controller
 {
@@ -12,7 +13,9 @@ class LoanController extends Controller
      */
     public function index()
     {
-        //
+        return view('loans.index', [
+            'loans' => Loan::all()
+        ]);
     }
 
     /**
@@ -28,7 +31,16 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|integer',
+            'item_id' => 'required|integer',
+            'checkout_date' => 'required|date',
+            'due_date' => 'required|date',
+            'returned_date' => 'date',
+        ]);
+
+        Loan::create($validated);
+        return redirect()->route('loan.index');
     }
 
     /**
