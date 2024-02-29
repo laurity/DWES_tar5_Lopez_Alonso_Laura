@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('user');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')->references('id')->on('items');
             $table->date('checkout_date');
