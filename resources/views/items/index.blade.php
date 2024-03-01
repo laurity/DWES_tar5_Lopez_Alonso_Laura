@@ -31,17 +31,18 @@
                             <tr>
                             <td class="border px-4 py-2 pt-5">
                                 <div class="flex justify-center h-20 w-20">
-                                        @if ($item->picture)
-                                        <img src="{{ asset(Storage::url($item->picture)) }}" alt="{{ $item->name }}" class="h-20 w-20">
-                                        @else
-                                        <img src="https://via.placeholder.com/150" alt="{{ $item->name }}" class="h-20 w-20">
-                                        @endif
-                                    </div>
+                                @if ($item->picture)
+                                    <img src="{{ asset(Storage::url($item->picture)) }}" alt="{{ $item->name }}" class="h-20 w-20">
+                                    @else
+                                    <img src="https://via.placeholder.com/150" alt="{{ $item->name }}" class="h-20 w-20">
+                                @endif
+                                </div>
                                 </td>
+
                                 <td class="border px-4 py-2">{{ $item->name }}</td>
                                 <td class="border px-4 py-2">{{ $item->description }}</td>
                                 <td class="border px-4 py-2">{{ $item->price }}</td>
-
+                                
                                 <td class="border px-4 py-2">
     <div class="flex space-x-2">
     <div>
@@ -75,20 +76,18 @@
 </div>
 
     <script>
-       document.getElementById('search').addEventListener('keyup', function() {
-    let input = document.getElementById('search');
-    let filter = input.value.toUpperCase();
-    let tbody = document.getElementById('items');
-    let tr = tbody.getElementsByTagName('tr');
+     document.getElementById('search').addEventListener('keyup', function() {
+    let searchValue = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#items tr');
 
-    for (let i = 0; i < tr.length; i++) {
-        let txtValue = tr[i].textContent || tr[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
+    rows.forEach(row => {
+        let itemName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if(itemName.indexOf(searchValue) === -1) {
+            row.style.display = 'none';
         } else {
-            tr[i].style.display = "none";
+            row.style.display = '';
         }
-    }
+    });
 });
     </script>
 </x-app-layout>

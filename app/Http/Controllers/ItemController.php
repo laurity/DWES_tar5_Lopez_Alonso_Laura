@@ -36,17 +36,19 @@ class ItemController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'string|nullable|max:750',
-            'picture' => 'string|nullable',
-            'price' => 'required|decimal',
-            'box_id' => 'required|exists:boxes,id'
+            'description' => 'nullable|string|max:500',
+            'picture' => 'nullable|mimes:jpg,jpeg,png,gif,bmp,svg,webp',
+            'price' => 'nullable|numeric',
+            'box_id' => 'nullable|exists:boxes,id',
         ]);
 
         if ($request->hasFile('picture')) {
-            $validated['picture'] = $request->file('picture')->store('imgs');
+            $validated['picture'] = $request->file('picture')->store('public/imgs');
         }
-        $item = Item::create($validated);
-        return redirect()->route('item.show', $item);
+
+        Item::create($validated);
+
+        return redirect(route('items.index'));
     }
 
     /**
@@ -78,16 +80,17 @@ class ItemController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'string|nullable|max:750',
-            'picture' => 'string|nullable',
-            'price' => 'required|decimal',
+            'picture' => 'nullable|mimes:jpg,jpeg,png,gif,bmp,svg,webp',
+            'price' => 'required|numeric',
             'box_id' => 'required|exists:boxes,id'
         ]);
         if ($request->hasFile('picture')) {
-            $validated['picture'] = $request->file('picture')->store('imgs');
+            $validated['picture'] = $request->file('picture')->store('public/imgs');
         }
 
-        $item->update($validated);
-        return redirect()->route('item.index');
+        Item::create($validated);
+
+        return redirect(route('items.index'));
     }
 
     /**
@@ -96,6 +99,6 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
-        return redirect()->route('items.index');
+        return redirect(route('items.index'));
     }
 }

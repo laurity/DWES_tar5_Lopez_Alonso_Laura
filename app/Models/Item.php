@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
-    protected $fillable = ['name', 'description', 'picture', 'price',  'box_id'];
+    protected $fillable = [
+        'name',
+        'description',
+        'picture',
+        'price',
+        'box_id'
+    ];
 
     use HasFactory;
     public function box(){
