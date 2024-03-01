@@ -19,6 +19,7 @@
                 <table class="table-auto w-full mt-10">
                     <thead>
                         <tr>
+                            <th class="px-4 py-2 text-gray-600">Imagen</th>
                             <th class="px-4 py-2 text-gray-600">Nombre</th>
                             <th class="px-4 py-2 text-gray-600">Descripción</th>
                             <th class="px-4 py-2 text-gray-600">Precio</th>
@@ -40,7 +41,7 @@
                                 <td class="border px-4 py-2">{{ $item->name }}</td>
                                 <td class="border px-4 py-2">{{ $item->description }}</td>
                                 <td class="border px-4 py-2">{{ $item->price }}</td>
-                                
+
                                 <td class="border px-4 py-2">
     <div class="flex space-x-2">
     <div>
@@ -73,28 +74,21 @@
     </div>
 </div>
 
-<script>
-    const search = document.getElementById('search');
-    const items = document.getElementById('items');
-    const btnSearch = document.getElementById('btn-search');
+    <script>
+       document.getElementById('search').addEventListener('keyup', function() {
+    let input = document.getElementById('search');
+    let filter = input.value.toUpperCase();
+    let tbody = document.getElementById('items');
+    let tr = tbody.getElementsByTagName('tr');
 
-    search.addEventListener('keyup', function() {
-        const searchValue = search.value.toLowerCase();
-        const tr = items.getElementsByTagName('tr');
-
-        for (let index = 0; index < tr.length; index++) {
-            const name = tr[index].getElementsByTagName('td')[0];
-
-            if (name) {
-                const nameValue = name.textContent || name.innerText;
-
-                if (nameValue.toLowerCase().indexOf(searchValue) > -1) {
-                    tr[index].style.display = '';
-                } else {
-                    tr[index].style.display = 'none';
-                }
-            }
+    for (let i = 0; i < tr.length; i++) {
+        let txtValue = tr[i].textContent || tr[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
         }
-    });
-</script>
+    }
+});
+    </script>
 </x-app-layout>
