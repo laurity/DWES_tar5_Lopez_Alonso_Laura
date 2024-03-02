@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Box extends Model
 {
+   protected $fillable = ['label', 'location'];
     use HasFactory;
+
 
     public function items(){
         return $this->hasMany(Item::class);

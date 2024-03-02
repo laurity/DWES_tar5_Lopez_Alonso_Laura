@@ -87,7 +87,7 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('picture')) {
-            $validated['picture'] = $request->file('picture')->store('public/photos');
+            $validated['picture'] = $request->file('picture')->store('public/imgs');
 
             if ($item->picture) {
                 Storage::delete($item->picture);

@@ -7,26 +7,25 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-
 class BoxController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         return view('boxes.index', [
-            'boxes' => Box::all()
+            'boxes' => Box::all(),
+            'items' => Item::all(),
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        
-
+        return view('boxes.create');
     }
 
     /**
@@ -35,23 +34,23 @@ class BoxController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'label' => 'string|max:255',
-            'location' => 'string|max:255',
+            'label' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
         ]);
 
         Box::create($validated);
-        return redirect()->route('box.index');
 
+        return redirect(route('boxes.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Box $box)
+    public function show(Box $box): View
     {
         return view('boxes.show', [
-            'box' => $box
+            'box' => $box,
+            'items' => $box->items,
         ]);
     }
 
@@ -62,7 +61,8 @@ class BoxController extends Controller
     {
         return view('boxes.edit', [
             'box' => $box,
-            'items' => Item::all()
+            'items' => Item::all(),
+            'unassignedItems' => Item::whereNull('box_id')->get(),
         ]);
     }
 
@@ -72,12 +72,25 @@ class BoxController extends Controller
     public function update(Request $request, Box $box)
     {
         $validated = $request->validate([
-            'label' => 'string|max:255',
-            'location' => 'string|max:255',
+            'label' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
         ]);
 
         $box->update($validated);
-        return redirect()->route('box.show', $box);
+
+        return redirect(route('boxes.index'));
+    }
+
+    /**
+     * Update the box_id for the specified item.
+     */
+    public function updateItemBox(Item $item, Request $request)
+    {
+        $request->validate([
+            'box_id' => 'nullable|exists:boxes,id',
+        ]);
+
+        $item->update(['box_id' => $request->input('box_id')]);
     }
 
     /**
@@ -85,7 +98,9 @@ class BoxController extends Controller
      */
     public function destroy(Box $box)
     {
+        $box->items()->update(['box_id' => null]);
         $box->delete();
-        return redirect()->route('box.index');
+
+        return redirect(route('boxes.index'));
     }
 }

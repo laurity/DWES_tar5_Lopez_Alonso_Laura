@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Items') }}
+            {{ __('Objetos') }}
         </h2>
     </x-slot>
 
@@ -23,6 +23,7 @@
                             <th class="px-4 py-2 text-gray-600">Nombre</th>
                             <th class="px-4 py-2 text-gray-600">Descripción</th>
                             <th class="px-4 py-2 text-gray-600">Precio</th>
+                            <th class="px-4 py-2 text-gray-600">Caja</th>
                             <th class="px-4 py-2 text-gray-600">Acciones</th>
                         </tr>
                     </thead>
@@ -42,6 +43,15 @@
                                 <td class="border px-4 py-2">{{ $item->name }}</td>
                                 <td class="border px-4 py-2">{{ $item->description }}</td>
                                 <td class="border px-4 py-2">{{ $item->price }}</td>
+                                <td class="border px-4 py-2">
+                                    <div">
+                                        @if ($item->box_id)
+                                        {{ $item->box->label }}
+                                        @else
+                                        Caja no asignada
+                                        @endif
+                                    </div>
+                                </td>
                                 
                                 <td class="border px-4 py-2">
     <div class="flex space-x-2">
