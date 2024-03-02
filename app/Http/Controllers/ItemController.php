@@ -6,6 +6,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Box;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -36,7 +37,7 @@ class ItemController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:750',
             'picture' => 'nullable|mimes:jpg,jpeg,png,gif,bmp,svg,webp',
             'price' => 'nullable|numeric',
             'box_id' => 'nullable|exists:boxes,id',
@@ -79,16 +80,21 @@ class ItemController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'string|nullable|max:750',
-            'picture' => 'nullable|mimes:jpg,jpeg,png,gif,bmp,svg,webp',
-            'price' => 'required|numeric',
-            'box_id' => 'required|exists:boxes,id'
+            'description' => 'nullable|string|max:750',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp',
+            'price' => 'nullable|numeric',
+            'box_id' => 'nullable|exists:boxes,id',
         ]);
+
         if ($request->hasFile('picture')) {
-            $validated['picture'] = $request->file('picture')->store('public/imgs');
+            $validated['picture'] = $request->file('picture')->store('public/photos');
+
+            if ($item->picture) {
+                Storage::delete($item->picture);
+            }
         }
 
-        Item::create($validated);
+        $item->update($validated);
 
         return redirect(route('items.index'));
     }
