@@ -20,7 +20,8 @@ class Item extends Model
         return $this->belongsTo(Box::class);
     }
 
-    public function loans(){
+    public function loans()
+    {
         return $this->hasMany(Loan::class);
     }
 }

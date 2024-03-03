@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use App\Models\Item;
+use App\Models\User;
 use Illuminate\View\View;
 
 class LoanController extends Controller
@@ -11,19 +13,29 @@ class LoanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        return view('loans.index', [
-            'loans' => Loan::all()
-        ]);
-    }
+    public function index(): View
+{
+    $loans = Loan::all(); 
+
+    return view('loans.index', [
+        'items' => Item::all(),
+        'users' => User::all(),
+        'loans' => $loans, 
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        $selectedItem = request()->input('item_id');
+
+        return view('loans.create', [
+            'items' => Item::all(),
+            'users' => User::all(),
+            'selectedItem' => $selectedItem,
+        ]);
     }
 
     /**
@@ -32,23 +44,28 @@ class LoanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|integer',
-            'item_id' => 'required|integer',
-            'checkout_date' => 'required|date',
+            'item_id' => 'required|exists:items,id',
             'due_date' => 'required|date',
-            'returned_date' => 'date',
         ]);
 
+        $validated['user_id'] = auth()->user()->id;
+        $validated['checkout_date'] = now();
+
         Loan::create($validated);
-        return redirect()->route('loan.index');
+
+        return redirect()->route('loans.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Loan $loan)
+    public function show(Loan $loan): View
     {
-        //
+        return view('loans.show', [
+            'loan' => $loan,
+            'item' => $loan->item,
+            'user' => $loan->user,
+        ]);
     }
 
     /**
@@ -64,7 +81,9 @@ class LoanController extends Controller
      */
     public function update(Request $request, Loan $loan)
     {
-        //
+        $loan->update(['returned_date' => now()]);
+           
+        return redirect(route('loans.index'));
     }
 
     /**
@@ -74,4 +93,11 @@ class LoanController extends Controller
     {
         //
     }
+    public function return(Loan $loan)
+{
+    $loan->is_returned = true;
+    $loan->save();
+
+    return redirect()->route('loans.index');
+}
 }

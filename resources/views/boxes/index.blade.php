@@ -25,12 +25,12 @@
         @foreach ($boxes as $box)
         <tr class="box-row cursor-pointer hover:bg-gray-750 border border-gray-300" data-id="{{ $box->id }}">
             <td class="px-6 py-4 border border-gray-300">
-                <div class="text-center text-sm font-medium text-gray-900 dark:text-gray-200">
+                <div class="text-center text-sm font-medium text-gray-900 ">
                     {{ $box->label }}
                 </div>
             </td>
             <td class="px-6 py-4 border border-gray-300">
-                <div class="text-center text-sm text-gray-900 dark:text-gray-200">{{ $box->location }}</div>
+                <div class="text-center text-sm text-gray-900 ">{{ $box->location }}</div>
             </td>
             <td class="px-6 py-4 border border-gray-300">
     <div class="flex justify-center space-x-2">

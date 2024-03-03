@@ -72,8 +72,13 @@
     </form>
 </div>
 <div>
-    <a href="{{ route('items.show', $item->id) }}"
+@if($item->loans()->whereNull('returned_date')->first())
+    <a href="{{ route('loans.show', $item->loans()->whereNull('returned_date')->first()->id) }}"
+        class="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">Ver préstamo</a>
+@else
+    <a href="{{ route('loans.create', ['item_id' => $item->id]) }}"
         class="inline-block bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">Prestar</a>
+@endif
 </div>
     </div>
 </td>
